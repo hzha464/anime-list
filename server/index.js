@@ -6,7 +6,6 @@ const mongoose = require("mongoose");
 const SingleAnime = require("./model/singleAnime");
 const Review = require("./model/review");
 const cors = require("cors");
-const PORT = process.env.PORT || 3000;
 const CustomError = require("./util/CustomError");
 const multer = require("multer");
 const { storage, cloudinary } = require("./cloudinary");
@@ -17,6 +16,7 @@ const JoiSchema = require("./util/Validation");
 const app = express();
 const path = require("path");
 const dbUrl = process.env.DB_URL;
+console.log(dbUrl);
 
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
@@ -141,6 +141,7 @@ app.use((err, req, res, next) => {
   // }
   // res.status(statusCode).json({ error: err });
 });
+const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
