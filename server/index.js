@@ -21,7 +21,7 @@ const dbUrl = process.env.DB_URL;
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(express.static(path.resolve(__dirname, "../client/build")));
+app.use(express.static(path.join(__dirname, "../client/build")));
 
 function catchAsync(func) {
   return function (req, res, next) {
