@@ -21,7 +21,7 @@ console.log(dbUrl);
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(express.static(path.join(__dirname, "../client/build")));
+app.use(express.static(path.join(__dirname, "public")));
 
 function catchAsync(func) {
   return function (req, res, next) {
@@ -100,10 +100,28 @@ app.post(
     anime.review.push(review);
     await review.save();
     await anime.save();
-    res.json({ status: 200 });
+    await anime.populate("review");
+    res.json({ status: 200, oneAnime: anime });
   })
 );
 
+app.delete(
+  "/review/:animeId/:id",
+  catchAsync(async (req, res) => {
+    const review = await Review.findById(req.params.id);
+    await review.deleteOne();
+
+    const anime = await SingleAnime.findByIdAndUpdate(
+      req.params.animeId,
+      { $pull: { review: req.params.id } },
+      { new: true }
+    );
+    // console.log(anime.review);
+    await anime.populate("review");
+
+    res.json({ statusCode: 200, oneAnime: anime });
+  })
+);
 app.delete(
   "/:AnimeId",
   catchAsync(async (req, res) => {
